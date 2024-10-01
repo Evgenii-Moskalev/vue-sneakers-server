@@ -7,16 +7,28 @@ const data = require("./data");
 const app = express();
 app.use(cors());
 
+const checkMatch = (data, title) => {
+  let result = data.filter((element) => {
+    return element.title.toLowerCase().includes(title.toLowerCase());
+  });
+
+  if (result.length != 0) {
+    return result;
+  }
+//   else return data;
+};
+
 app.get("/items", (req, res) => {
-  const { sortBy } = req.query;
-  //   console.log(req.query);
-  //   console.log(sortBy);
+  const { sortBy, title = "" } = req.query;
+//   console.log(req.query);
+//   console.log(sortBy, title);
+
   if (sortBy === "price") {
     data.sort((a, b) => a.price - b.price);
-    res.send(data);
+    res.send(checkMatch(data, title));
   } else if (sortBy === "-price") {
     data.sort((a, b) => b.price - a.price);
-    res.send(data);
+    res.send(checkMatch(data, title));
   } else if (sortBy === "name") {
     data.sort((a, b) => {
       //   a.title - b.title;
@@ -30,11 +42,13 @@ app.get("/items", (req, res) => {
       }
       return 0;
     });
-    res.send(data);
+      
+    res.send(checkMatch(data, title));
   } else {
     //   console.log("Hi");
     data.sort((a, b) => a.id - b.id);
-    res.send(data);
+
+    res.send(checkMatch(data, title));
   }
 });
 

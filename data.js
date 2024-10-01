@@ -1,7 +1,7 @@
 const items = [
   {
     id: 1,
-    title: "Nike Blazer Mid Suede",
+    title: "Nike  Blazer Mid Suede",
     price: 129,
     imageUrl: "/sneakers/sneakers-1.jpg",
   },
