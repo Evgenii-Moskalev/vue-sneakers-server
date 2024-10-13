@@ -1,11 +1,11 @@
 const express = require("express");
 const cors = require("cors");
-var bodyParser = require("body-parser");
-
-const data = require("./data");
+let bodyParser = require("body-parser");
+const { items: data, favoriteItems } = require("./data");
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 const checkMatch = (data, title) => {
   let result = data.filter((element) => {
@@ -15,13 +15,14 @@ const checkMatch = (data, title) => {
   if (result.length != 0) {
     return result;
   }
-//   else return data;
+  //   else return data;
+  console.log(checkMatch);
 };
 
 app.get("/items", (req, res) => {
   const { sortBy, title = "" } = req.query;
-//   console.log(req.query);
-//   console.log(sortBy, title);
+  //   console.log(req.query);
+  //   console.log(sortBy, title);
 
   if (sortBy === "price") {
     data.sort((a, b) => a.price - b.price);
@@ -42,7 +43,7 @@ app.get("/items", (req, res) => {
       }
       return 0;
     });
-      
+
     res.send(checkMatch(data, title));
   } else {
     //   console.log("Hi");
@@ -50,6 +51,19 @@ app.get("/items", (req, res) => {
 
     res.send(checkMatch(data, title));
   }
+});
+
+
+app.get("/favorites", (req, res) => {
+  res.send(favoriteItems);
+});
+
+app.post("/favorites", (req, res) => {
+  // console.log(req.body);
+
+  const { parentId } = req.body;
+  favoriteItems.push({ id: favoriteItems.length + 1, parentId: parentId });
+  res.send(favoriteItems);
 });
 
 app.listen(8000, () => console.log(`Server is running on port 8000`));
